@@ -1,0 +1,60 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: pega-backend
+
+  # ===== PostgreSQL =====
+  datasource:
+    url: jdbc:postgresql://localhost:5432/pega_db
+    username: ${DB_USERNAME:pega_user}
+    password: ${DB_PASSWORD:pega_pass}
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      maximum-pool-size: 10
+      minimum-idle: 2
+      connection-timeout: 20000
+
+  # ===== JPA / Hibernate =====
+  jpa:
+    hibernate:
+      ddl-auto: update        # cria/atualiza tabelas automaticamente
+    show-sql: false
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+
+  # ===== Jackson (datas como ISO-8601) =====
+  jackson:
+    serialization:
+      write-dates-as-timestamps: false
+
+# ===== JWT personalizado =====
+pega:
+  # ===== JADE (porta RMI — Spring Boot usa 8080, sem conflito) =====
+  jade:
+    host: ${JADE_HOST:localhost}
+    port: ${JADE_PORT:1099}
+
+  jwt:
+    # Mínimo 256 bits (32 chars). Em prod use variável de ambiente JWT_SECRET.
+    secret: ${JWT_SECRET:pega-tcc-secret-key-2024-muito-segura-256bits-ok!}
+    expiration-ms: 86400000   # 24 horas
+
+# ===== Swagger UI =====
+springdoc:
+  swagger-ui:
+    path: /swagger-ui.html
+    enabled: true
+    tags-sorter: alpha
+  api-docs:
+    path: /v3/api-docs
+
+# ===== Logging =====
+logging:
+  level:
+    br.tcc.pega: DEBUG
+    org.springframework.security: WARN
+    org.hibernate.SQL: WARN
