@@ -31,4 +31,7 @@ public class GameResultDto {
     private String activityNome;
     private String activityTipo;
     private String studentNome;
+
+    /** JSON com detalhamento por palavra: [{palavra, acertou, tempoMs}, ...] */
+    private String detalhesPalavras;
 }

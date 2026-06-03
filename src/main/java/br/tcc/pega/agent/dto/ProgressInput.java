@@ -14,4 +14,6 @@ public class ProgressInput {
     private Integer pontuacao;
     private String  feedback;
     private String  feedbackTipo;
+    /** JSON serializado com [{palavra, acertou, tempoMs}, ...] */
+    private String  detalhesPalavras;
 }

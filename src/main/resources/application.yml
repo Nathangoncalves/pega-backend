@@ -1,25 +1,26 @@
 server:
-  port: 8080
+  port: ${PORT:8080}   # Railway injeta $PORT automaticamente
 
 spring:
   application:
     name: pega-backend
 
   # ===== PostgreSQL =====
+  # Railway injeta PGHOST, PGPORT, PGDATABASE, PGUSER, PGPASSWORD automaticamente
   datasource:
-    url: jdbc:postgresql://localhost:5432/pega_db
-    username: ${DB_USERNAME:pega_user}
-    password: ${DB_PASSWORD:pega_pass}
+    url: jdbc:postgresql://${PGHOST:localhost}:${PGPORT:5432}/${PGDATABASE:pega_db}
+    username: ${PGUSER:${DB_USERNAME:pega_user}}
+    password: ${PGPASSWORD:${DB_PASSWORD:pega_pass}}
     driver-class-name: org.postgresql.Driver
     hikari:
-      maximum-pool-size: 10
-      minimum-idle: 2
+      maximum-pool-size: 5      # reduzido para o plano gratuito
+      minimum-idle: 1
       connection-timeout: 20000
 
   # ===== JPA / Hibernate =====
   jpa:
     hibernate:
-      ddl-auto: update        # cria/atualiza tabelas automaticamente
+      ddl-auto: update
     show-sql: false
     properties:
       hibernate:
@@ -31,15 +32,13 @@ spring:
     serialization:
       write-dates-as-timestamps: false
 
-# ===== JWT personalizado =====
+# ===== JWT =====
 pega:
-  # ===== JADE (porta RMI — Spring Boot usa 8080, sem conflito) =====
   jade:
     host: ${JADE_HOST:localhost}
     port: ${JADE_PORT:1099}
 
   jwt:
-    # Mínimo 256 bits (32 chars). Em prod use variável de ambiente JWT_SECRET.
     secret: ${JWT_SECRET:pega-tcc-secret-key-2024-muito-segura-256bits-ok!}
     expiration-ms: 86400000   # 24 horas
 
@@ -55,6 +54,6 @@ springdoc:
 # ===== Logging =====
 logging:
   level:
-    br.tcc.pega: DEBUG
+    br.tcc.pega: INFO
     org.springframework.security: WARN
     org.hibernate.SQL: WARN

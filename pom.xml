@@ -96,13 +96,13 @@
       <version>${springdoc.version}</version>
     </dependency>
 
-    <!-- ===== JADE (jar local em tcc/lib) ===== -->
+    <!-- ===== JADE (jar local em libs/) ===== -->
     <dependency>
       <groupId>com.tilab.jade</groupId>
       <artifactId>jade</artifactId>
       <version>4.5.0</version>
       <scope>system</scope>
-      <systemPath>${project.basedir}/../tcc/lib/jade.jar</systemPath>
+      <systemPath>${project.basedir}/libs/jade.jar</systemPath>
     </dependency>
 
     <!-- ===== Testes ===== -->

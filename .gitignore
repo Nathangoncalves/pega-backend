@@ -4,9 +4,11 @@ target/
 
 # ── Compiled files ──────────────────────────────────────────────────────────
 *.class
-*.jar
 *.war
 *.ear
+# JARs excluídos — EXCETO o jade.jar em libs/ (necessário para o build no Railway)
+target/*.jar
+!libs/jade.jar
 
 # ── IDEs ────────────────────────────────────────────────────────────────────
 .idea/

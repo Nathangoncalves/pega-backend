@@ -32,6 +32,10 @@ public class GameResult {
     @Column(name = "tempo_ms", nullable = false)
     private Long tempoMs;
 
+    /** JSON com detalhamento por palavra: [{palavra, acertou, tempoMs}, ...] */
+    @Column(name = "detalhes_palavras", columnDefinition = "TEXT")
+    private String detalhesPalavras;
+
     @Column(nullable = false)
     private LocalDateTime timestamp;
 

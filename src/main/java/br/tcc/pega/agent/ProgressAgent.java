@@ -78,6 +78,7 @@ public class ProgressAgent extends BaseAgent {
                     .acertos(input.getAcertos())
                     .erros(input.getErros())
                     .tempoMs(input.getTempoMs())
+                    .detalhesPalavras(input.getDetalhesPalavras())
                     .timestamp(LocalDateTime.now())
                     .build();
             result = resultRepo.save(result);

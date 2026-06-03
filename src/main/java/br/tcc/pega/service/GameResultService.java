@@ -75,6 +75,7 @@ public class GameResultService {
                 .acertos(r.getAcertos())
                 .erros(r.getErros())
                 .tempoMs(r.getTempoMs())
+                .detalhesPalavras(r.getDetalhesPalavras())
                 .timestamp(r.getTimestamp())
                 .build();
     }

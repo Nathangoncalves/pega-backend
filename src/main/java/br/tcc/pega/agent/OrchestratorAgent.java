@@ -100,6 +100,12 @@ public class OrchestratorAgent extends BaseAgent {
         }
 
         private ProgressOutput callProgress(PlayGameRequest req, AssessmentOutput assessment) {
+            // Serializa lista de palavras para JSON (pode ser null se frontend antigo)
+            String detalhesPalavrasJson = null;
+            if (req.getPalavras() != null && !req.getPalavras().isEmpty()) {
+                detalhesPalavrasJson = JsonUtil.toJson(req.getPalavras());
+            }
+
             ProgressInput input = ProgressInput.builder()
                     .sessionId(req.getSessionId())
                     .studentId(req.getStudentId())
@@ -110,6 +116,7 @@ public class OrchestratorAgent extends BaseAgent {
                     .pontuacao(assessment.getPontuacao())
                     .feedback(assessment.getFeedback())
                     .feedbackTipo(assessment.getFeedbackTipo())
+                    .detalhesPalavras(detalhesPalavrasJson)
                     .build();
             String json = requestAndWait("progress", JsonUtil.toJson(input));
             return json != null ? JsonUtil.fromJson(json, ProgressOutput.class) : null;
