@@ -1,21 +1,26 @@
 server:
-  port: ${PORT:8080}   # Railway injeta $PORT automaticamente
+  port: ${PORT:8080}
 
 spring:
   application:
     name: pega-backend
 
-  # ===== PostgreSQL =====
-  # Railway injeta PGHOST, PGPORT, PGDATABASE, PGUSER, PGPASSWORD automaticamente
+  # ===== PostgreSQL (Neon / Render / local) =====
   datasource:
-    url: jdbc:postgresql://${PGHOST:localhost}:${PGPORT:5432}/${PGDATABASE:pega_db}
+    # PGSSLMODE=require para Neon/produção | disable para local
+    url: jdbc:postgresql://${PGHOST:localhost}:${PGPORT:5432}/${PGDATABASE:pega_db}?sslmode=${PGSSLMODE:disable}
     username: ${PGUSER:${DB_USERNAME:pega_user}}
     password: ${PGPASSWORD:${DB_PASSWORD:pega_pass}}
     driver-class-name: org.postgresql.Driver
     hikari:
-      maximum-pool-size: 5      # reduzido para o plano gratuito
+      maximum-pool-size: 5       # Neon free tier suporta até 10 conexões
       minimum-idle: 1
-      connection-timeout: 20000
+      connection-timeout: 30000
+      idle-timeout: 600000
+      max-lifetime: 1800000
+      # SSL obrigatório para Neon
+      data-source-properties:
+        sslmode: ${PGSSLMODE:disable}
 
   # ===== JPA / Hibernate =====
   jpa:
@@ -27,27 +32,25 @@ spring:
         dialect: org.hibernate.dialect.PostgreSQLDialect
         format_sql: true
 
-  # ===== Jackson (datas como ISO-8601) =====
+  # ===== Jackson =====
   jackson:
     serialization:
       write-dates-as-timestamps: false
 
-# ===== JWT =====
+# ===== JADE + JWT =====
 pega:
   jade:
     host: ${JADE_HOST:localhost}
     port: ${JADE_PORT:1099}
-
   jwt:
     secret: ${JWT_SECRET:pega-tcc-secret-key-2024-muito-segura-256bits-ok!}
-    expiration-ms: 86400000   # 24 horas
+    expiration-ms: 86400000
 
 # ===== Swagger UI =====
 springdoc:
   swagger-ui:
     path: /swagger-ui.html
     enabled: true
-    tags-sorter: alpha
   api-docs:
     path: /v3/api-docs
 
