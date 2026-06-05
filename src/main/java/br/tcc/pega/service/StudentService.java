@@ -1,9 +1,12 @@
 package br.tcc.pega.service;
 
 import br.tcc.pega.dto.StudentDto;
+import br.tcc.pega.entity.GameResult;
 import br.tcc.pega.entity.Student;
 import br.tcc.pega.entity.User;
 import br.tcc.pega.exception.ResourceNotFoundException;
+import br.tcc.pega.repository.FeedbackRepository;
+import br.tcc.pega.repository.GameResultRepository;
 import br.tcc.pega.repository.StudentRepository;
 import br.tcc.pega.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -17,8 +20,10 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class StudentService {
 
-    private final StudentRepository studentRepository;
-    private final UserRepository userRepository;
+    private final StudentRepository    studentRepository;
+    private final UserRepository       userRepository;
+    private final GameResultRepository gameResultRepository;
+    private final FeedbackRepository   feedbackRepository;
 
     public List<StudentDto> findByUserId(Long userId) {
         return studentRepository.findByUserId(userId)
@@ -44,10 +49,6 @@ public class StudentService {
         return toDto(studentRepository.save(student));
     }
 
-    /**
-     * Soma pontos ao score do aluno e recalcula o nível.
-     * Regra: nível = (scoreTotal / 100) + 1  — cada 100 pontos avança um nível.
-     */
     @Transactional
     public StudentDto updateScore(Long studentId, Integer pontosGanhos) {
         Student student = getOrThrow(studentId);
@@ -56,9 +57,29 @@ public class StudentService {
         return toDto(studentRepository.save(student));
     }
 
+    /**
+     * Exclui o aluno e todos os dados relacionados em cascata:
+     * feedbacks → game_results → student
+     */
     @Transactional
     public void delete(Long id) {
-        studentRepository.delete(getOrThrow(id));
+        Student student = getOrThrow(id);
+
+        // 1. Busca todos os resultados do aluno
+        List<GameResult> results = gameResultRepository
+                .findByStudentIdOrderByTimestampDesc(id);
+
+        // 2. Deleta feedbacks vinculados a cada resultado
+        for (GameResult result : results) {
+            feedbackRepository.findByGameResultId(result.getId())
+                    .ifPresent(feedbackRepository::delete);
+        }
+
+        // 3. Deleta os resultados
+        gameResultRepository.deleteAll(results);
+
+        // 4. Deleta o aluno
+        studentRepository.delete(student);
     }
 
     private Student getOrThrow(Long id) {
