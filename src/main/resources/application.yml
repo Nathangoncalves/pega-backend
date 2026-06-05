@@ -8,7 +8,7 @@ spring:
   # ===== PostgreSQL (Neon — sempre requer SSL) =====
   datasource:
     # sslmode=require fixo — Neon sempre exige SSL
-    url: jdbc:postgresql://${PGHOST:localhost}:${PGPORT:5432}/${PGDATABASE:pega_db}?sslmode=require&sslrootcert=system
+    url: jdbc:postgresql://${PGHOST:localhost}:${PGPORT:5432}/${PGDATABASE:pega_db}?sslmode=require
     username: ${PGUSER:${DB_USERNAME:pega_user}}
     password: ${PGPASSWORD:${DB_PASSWORD:pega_pass}}
     driver-class-name: org.postgresql.Driver
