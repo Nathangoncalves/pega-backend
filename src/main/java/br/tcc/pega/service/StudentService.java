@@ -56,6 +56,11 @@ public class StudentService {
         return toDto(studentRepository.save(student));
     }
 
+    @Transactional
+    public void delete(Long id) {
+        studentRepository.delete(getOrThrow(id));
+    }
+
     private Student getOrThrow(Long id) {
         return studentRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Aluno", id));
