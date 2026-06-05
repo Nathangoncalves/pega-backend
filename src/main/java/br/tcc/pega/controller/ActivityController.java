@@ -51,8 +51,8 @@ public class ActivityController {
     }
 
     @DeleteMapping("/{id}")
-    @Operation(summary = "Desativar atividade (soft delete, somente ADMIN)")
-    @PreAuthorize("hasRole('ADMIN')")
+    @Operation(summary = "Desativar atividade (PROFESSOR, TERAPEUTA ou ADMIN)")
+    @PreAuthorize("hasAnyRole('PROFESSOR', 'TERAPEUTA', 'ADMIN')")
     public ResponseEntity<Void> deactivate(@PathVariable Long id) {
         activityService.deactivate(id);
         return ResponseEntity.noContent().build();
