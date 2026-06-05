@@ -5,22 +5,19 @@ spring:
   application:
     name: pega-backend
 
-  # ===== PostgreSQL (Neon / Render / local) =====
+  # ===== PostgreSQL (Neon — sempre requer SSL) =====
   datasource:
-    # PGSSLMODE=require para Neon/produção | disable para local
-    url: jdbc:postgresql://${PGHOST:localhost}:${PGPORT:5432}/${PGDATABASE:pega_db}?sslmode=${PGSSLMODE:disable}
+    # sslmode=require fixo — Neon sempre exige SSL
+    url: jdbc:postgresql://${PGHOST:localhost}:${PGPORT:5432}/${PGDATABASE:pega_db}?sslmode=require&sslrootcert=system
     username: ${PGUSER:${DB_USERNAME:pega_user}}
     password: ${PGPASSWORD:${DB_PASSWORD:pega_pass}}
     driver-class-name: org.postgresql.Driver
     hikari:
-      maximum-pool-size: 5       # Neon free tier suporta até 10 conexões
+      maximum-pool-size: 5
       minimum-idle: 1
       connection-timeout: 30000
       idle-timeout: 600000
       max-lifetime: 1800000
-      # SSL obrigatório para Neon
-      data-source-properties:
-        sslmode: ${PGSSLMODE:disable}
 
   # ===== JPA / Hibernate =====
   jpa:
@@ -30,7 +27,6 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
-        format_sql: true
 
   # ===== Jackson =====
   jackson:
