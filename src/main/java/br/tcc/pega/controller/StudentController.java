@@ -11,6 +11,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/students")
 @RequiredArgsConstructor
@@ -19,6 +21,12 @@ import org.springframework.web.bind.annotation.*;
 public class StudentController {
 
     private final StudentService studentService;
+
+    @GetMapping("/user/{userId}")
+    @Operation(summary = "Listar alunos por professor/terapeuta responsável")
+    public ResponseEntity<List<StudentDto>> findByUser(@PathVariable Long userId) {
+        return ResponseEntity.ok(studentService.findByUserId(userId));
+    }
 
     @GetMapping("/{id}")
     @Operation(summary = "Buscar aluno por ID")
