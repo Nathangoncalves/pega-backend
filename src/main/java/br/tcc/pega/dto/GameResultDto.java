@@ -4,17 +4,18 @@ import jakarta.validation.constraints.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Data @NoArgsConstructor @AllArgsConstructor @Builder
 public class GameResultDto {
 
-    private Long id;
+    private UUID id;
 
     @NotNull(message = "studentId é obrigatório")
-    private Long studentId;
+    private UUID studentId;
 
     @NotNull(message = "activityId é obrigatório")
-    private Long activityId;
+    private UUID activityId;
 
     @NotNull @Min(0)
     private Integer acertos;

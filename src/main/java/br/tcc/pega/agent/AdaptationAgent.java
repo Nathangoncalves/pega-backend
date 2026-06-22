@@ -46,6 +46,7 @@ public class AdaptationAgent extends BaseAgent {
 
             try {
                 @SuppressWarnings("unchecked")
+                // TODO
                 Map<String, Object> params = JsonUtil.fromJson(msg.getContent(), Map.class);
                 Long studentId = ((Number) params.get("studentId")).longValue();
 

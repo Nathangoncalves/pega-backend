@@ -3,6 +3,8 @@ package br.tcc.pega.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.UUID;
+
 /**
  * Feedback gerado após cada sessão de jogo.
  * Será populado futuramente pelo agente JADE de avaliação (AssessmentAgent).
@@ -13,8 +15,8 @@ import lombok.*;
 public class Feedback {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private UUID id;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "game_result_id", nullable = false, unique = true)

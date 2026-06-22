@@ -2,15 +2,17 @@ package br.tcc.pega.repository;
 
 import br.tcc.pega.entity.Activity;
 import br.tcc.pega.entity.Activity.ActivityType;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.util.List;
+import java.util.UUID;
 
-public interface ActivityRepository extends JpaRepository<Activity, Long> {
+public interface ActivityRepository extends JpaRepository<Activity, UUID> {
 
-    List<Activity> findByAtivoTrue();
+    Page<Activity> findByAtivoTrue(Pageable pageable);
 
-    List<Activity> findByDificuldade(Integer dificuldade);
+    Page<Activity> findByTipoAndAtivoTrue(ActivityType tipo, Pageable pageable);
 
-    List<Activity> findByTipoAndAtivoTrue(ActivityType tipo);
+    Page<Activity> findByDificuldade(Integer dificuldade, Pageable pageable);
 }

@@ -1,9 +1,13 @@
 package br.tcc.pega.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 
 @Entity
 @Table(name = "users")
@@ -11,8 +15,8 @@ import java.time.LocalDateTime;
 public class User {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private UUID id;
 
     @Column(unique = true, nullable = false, length = 150)
     private String email;
@@ -29,6 +33,12 @@ public class User {
 
     @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt;
+
+    /** Alunos gerenciados por este professor/terapeuta — sem cascade: excluir usuário não exclui alunos */
+    @OneToMany(mappedBy = "responsavel", fetch = FetchType.LAZY)
+    @JsonIgnore
+    @Builder.Default
+    private List<Student> alunos = new ArrayList<>();
 
     @PrePersist
     void prePersist() {

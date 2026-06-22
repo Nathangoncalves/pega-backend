@@ -1,16 +1,14 @@
 package br.tcc.pega.exception;
 
-import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.ResponseStatus;
+import java.util.UUID;
 
-@ResponseStatus(HttpStatus.NOT_FOUND)
 public class ResourceNotFoundException extends RuntimeException {
 
     public ResourceNotFoundException(String message) {
         super(message);
     }
 
-    public ResourceNotFoundException(String resource, Long id) {
-        super(resource + " não encontrado(a) com id: " + id);
+    public ResourceNotFoundException(String entity, UUID id) {
+        super(entity + " não encontrado(a) com id: " + id);
     }
 }

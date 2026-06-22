@@ -1,18 +1,24 @@
 package br.tcc.pega.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Entity
-@Table(name = "game_results")
+@Table(name = "game_results", indexes = {
+        @Index(name = "idx_game_results_student_id",  columnList = "student_id"),
+        @Index(name = "idx_game_results_activity_id", columnList = "activity_id"),
+        @Index(name = "idx_game_results_timestamp",   columnList = "timestamp")
+})
 @Getter @Setter @NoArgsConstructor @AllArgsConstructor @Builder
 public class GameResult {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private UUID id;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "student_id", nullable = false)
@@ -38,6 +44,11 @@ public class GameResult {
 
     @Column(nullable = false)
     private LocalDateTime timestamp;
+
+    /** Cascateia remoção: ao excluir o resultado, o feedback vinculado é excluído */
+    @OneToOne(mappedBy = "gameResult", cascade = CascadeType.REMOVE, orphanRemoval = true, fetch = FetchType.LAZY)
+    @JsonIgnore
+    private Feedback feedback;
 
     @PrePersist
     void prePersist() {

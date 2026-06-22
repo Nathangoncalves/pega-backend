@@ -4,15 +4,16 @@ import jakarta.validation.constraints.*;
 import lombok.Data;
 
 import java.util.List;
+import java.util.UUID;
 
 @Data
 public class PlayGameRequest {
 
     @NotNull
-    private Long studentId;
+    private UUID studentId;
 
     @NotNull
-    private Long activityId;
+    private UUID activityId;
 
     @NotNull @Min(0)
     private Integer acertos;

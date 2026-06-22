@@ -1,0 +1,8 @@
+- Criar Index nas Entidades que contém relacionamentos FK - PK etc...
+- Relacionamentos Entidades se achar conveniente
+- Mudar todos os retornos de lista pra paginação
+- Utilizar SOLID em todos os findById() and Optional.of
+- Mapear melhor dominio entre estudante e user comum
+- Mudar todos os ids de long pra UUID
+- Dividir as responsabilidade dos Services, em Interfaces CRUD, Interface especifica
+- Seguir como exemplo CrudService para todos e interfaces especificas se necessário

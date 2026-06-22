@@ -7,12 +7,15 @@ import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/activities")
@@ -25,13 +28,14 @@ public class ActivityController {
 
     @GetMapping
     @Operation(summary = "Listar todas as atividades ativas")
-    public ResponseEntity<List<ActivityDto>> listAll() {
-        return ResponseEntity.ok(activityService.findAllAtivas());
+    public ResponseEntity<Page<ActivityDto>> listAll(
+            @PageableDefault(size = 20, sort = "nome") Pageable pageable) {
+        return ResponseEntity.ok(activityService.findAllAtivas(pageable));
     }
 
     @GetMapping("/{id}")
     @Operation(summary = "Buscar atividade por ID")
-    public ResponseEntity<ActivityDto> getById(@PathVariable Long id) {
+    public ResponseEntity<ActivityDto> getById(@PathVariable UUID id) {
         return ResponseEntity.ok(activityService.findById(id));
     }
 
@@ -45,7 +49,7 @@ public class ActivityController {
     @PutMapping("/{id}")
     @Operation(summary = "Atualizar atividade existente")
     @PreAuthorize("hasAnyRole('PROFESSOR', 'ADMIN')")
-    public ResponseEntity<ActivityDto> update(@PathVariable Long id,
+    public ResponseEntity<ActivityDto> update(@PathVariable UUID id,
                                               @Valid @RequestBody ActivityDto dto) {
         return ResponseEntity.ok(activityService.update(id, dto));
     }
@@ -53,7 +57,7 @@ public class ActivityController {
     @DeleteMapping("/{id}")
     @Operation(summary = "Desativar atividade (PROFESSOR, TERAPEUTA ou ADMIN)")
     @PreAuthorize("hasAnyRole('PROFESSOR', 'TERAPEUTA', 'ADMIN')")
-    public ResponseEntity<Void> deactivate(@PathVariable Long id) {
+    public ResponseEntity<Void> deactivate(@PathVariable UUID id) {
         activityService.deactivate(id);
         return ResponseEntity.noContent().build();
     }

@@ -3,10 +3,12 @@ package br.tcc.pega.dto;
 import jakarta.validation.constraints.*;
 import lombok.*;
 
+import java.util.UUID;
+
 @Data @NoArgsConstructor @AllArgsConstructor @Builder
 public class ActivityDto {
 
-    private Long id;
+    private UUID id;
 
     @NotBlank(message = "Nome da atividade é obrigatório")
     @Size(min = 2, max = 150)

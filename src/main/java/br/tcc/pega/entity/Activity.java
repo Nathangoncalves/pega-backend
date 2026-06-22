@@ -1,7 +1,12 @@
 package br.tcc.pega.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 
 @Entity
 @Table(name = "activities")
@@ -9,8 +14,8 @@ import lombok.*;
 public class Activity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private UUID id;
 
     @Column(nullable = false, length = 150)
     private String nome;
@@ -28,6 +33,12 @@ public class Activity {
 
     @Column(nullable = false)
     private Boolean ativo;
+
+    /** Sem cascade: excluir uma atividade não deve apagar o histórico de resultados */
+    @OneToMany(mappedBy = "activity", fetch = FetchType.LAZY)
+    @JsonIgnore
+    @Builder.Default
+    private List<GameResult> resultados = new ArrayList<>();
 
     @PrePersist
     void prePersist() {

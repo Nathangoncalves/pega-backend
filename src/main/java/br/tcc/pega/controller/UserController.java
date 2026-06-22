@@ -9,14 +9,15 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/user")
@@ -45,9 +46,11 @@ public class UserController {
 
     @GetMapping("/students")
     @Operation(summary = "Lista os alunos vinculados ao usuário autenticado")
-    public ResponseEntity<List<StudentDto>> getMyStudents(@AuthenticationPrincipal UserDetails principal) {
+    public ResponseEntity<Page<StudentDto>> getMyStudents(
+            @AuthenticationPrincipal UserDetails principal,
+            @PageableDefault(size = 20, sort = "nome") Pageable pageable) {
         User user = userRepository.findByEmail(principal.getUsername())
                 .orElseThrow(() -> new RuntimeException("Usuário não encontrado"));
-        return ResponseEntity.ok(studentService.findByUserId(user.getId()));
+        return ResponseEntity.ok(studentService.findByResponsavelId(user.getId(), pageable));
     }
 }
